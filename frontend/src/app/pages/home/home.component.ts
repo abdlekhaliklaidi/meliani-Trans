@@ -295,8 +295,12 @@ import { CommonModule } from '@angular/common';
     }
 
     .hero-visual {
-      // background-image: url(https://images.pexels.com/photos/7464722/pexels-photo-7464722.jpeg);
+      background-image: url(https://media.discordapp.net/attachments/1211311091553144922/1507829033004699859/IMG-20260523-WA0000.jpg?ex=6a169e77&is=6a154cf7&hm=512270933a74d61725fe1ea9e620ae1dfa3cd4cdc54334222089a9871696dbad&=&format=webp&width=782&height=782);
       position: relative;
+      // background-size: cover;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;

@@ -53,8 +53,9 @@ import { CommonModule } from '@angular/common';
             <h4>Contact</h4>
             <ul>
               <li><i class="fas fa-phone"></i> +212 6 68 18 95 58</li>
-              <li><i class="fas fa-envelope"></i> contact&#64;melianitrans.com</li>
-              <li><i class="fas fa-map-marker-alt"></i> Route de Tiret, n°/21, Oujda Maroc</li>
+              <li><i class="fas fa-phone"></i> +212 6 22 53 78 06</li>
+              <li><i class="fas fa-envelope"></i> transmeliani&#64;gmail.com</li>
+              <li><i class="fas fa-map-marker-alt"></i> Route tairet lot laanaya N/21-Oujda</li>
               <li><i class="fas fa-clock"></i> Lun - Sam: 9h - 18h</li>
             </ul>
           </div>

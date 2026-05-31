@@ -15,12 +15,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShipmentResponseDto {
-    
+
     private Long id;
     private String trackingNumber;
+
+    // ✅ Expéditeur
+    private String senderFirstName;
+    private String senderLastName;
+
+    // Destinataire
     private String recipientFirstName;
     private String recipientLastName;
     private String recipientFullName;
+
+    // ✅ Informations colis
+    private String packageType;
+    private Double weight;
+
     private String shippingCity;
     private String deliveryCity;
     private String country;
@@ -31,4 +42,5 @@ public class ShipmentResponseDto {
     private List<ShipmentStatusHistoryDto> statusHistory;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String phone;
 }

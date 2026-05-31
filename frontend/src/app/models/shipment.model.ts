@@ -1,19 +1,52 @@
 export interface Shipment {
   id: number;
   trackingNumber: string;
+
+  // ✅ Expéditeur
+  senderFirstName: string;
+  senderLastName: string;
+
+  // Destinataire
   recipientFirstName: string;
   recipientLastName: string;
   recipientFullName: string;
+
+  // ✅ Informations colis
+  packageType: string;
+  weight: number;
+
   shippingCity: string;
   deliveryCity: string;
   country: string;
   shippingDate: string;
   currentStatus: string;
   currentLocation: string;
+  phone?: string;
   status: ShipmentStatus;
   statusHistory: ShipmentStatusHistory[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ShipmentRequestDto {
+  trackingNumber?: string;
+
+  // ✅ Expéditeur
+  senderFirstName: string;
+  senderLastName: string;
+
+  // Destinataire
+  recipientFirstName: string;
+  recipientLastName: string;
+
+  // ✅ Informations colis
+  packageType: string;
+  weight: number;
+
+  shippingCity: string;
+  deliveryCity: string;
+  country: string;
+  shippingDate: string;
 }
 
 export interface ShipmentStatusHistory {

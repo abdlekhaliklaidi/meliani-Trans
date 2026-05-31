@@ -21,28 +21,42 @@ public class ShipmentService {
     @Autowired
     private ShipmentStatusHistoryRepository statusHistoryRepository;
 
+    // =============================================
+    // CREATE
+    // =============================================
     @Transactional
-    public ShipmentResponseDto createShipment(ShipmentRequestDto requestDto) {
+    public ShipmentResponseDto createShipment(ShipmentRequestDto dto) {
         Shipment shipment = new Shipment();
-        shipment.setRecipientFirstName(requestDto.getRecipientFirstName());
-        shipment.setRecipientLastName(requestDto.getRecipientLastName());
-        shipment.setShippingCity(requestDto.getShippingCity());
-        shipment.setDeliveryCity(requestDto.getDeliveryCity());
-        shipment.setCountry(requestDto.getCountry());
-        shipment.setShippingDate(requestDto.getShippingDate());
+
+        if (dto.getTrackingNumber() != null && !dto.getTrackingNumber().isBlank()) {
+            shipment.setTrackingNumber(dto.getTrackingNumber());
+        }
+
+        shipment.setSenderFirstName(dto.getSenderFirstName());
+        shipment.setSenderLastName(dto.getSenderLastName());
+        shipment.setRecipientFirstName(dto.getRecipientFirstName());
+        shipment.setRecipientLastName(dto.getRecipientLastName());
+        shipment.setPackageType(dto.getPackageType());
+        shipment.setWeight(dto.getWeight());
+        shipment.setShippingCity(dto.getShippingCity());
+        shipment.setDeliveryCity(dto.getDeliveryCity());
+        shipment.setCountry(dto.getCountry());
+        shipment.setShippingDate(dto.getShippingDate());
+        shipment.setPhone(dto.getPhone());
         shipment.setCurrentStatus("En préparation");
-        shipment.setCurrentLocation(requestDto.getShippingCity());
+        shipment.setCurrentLocation(dto.getShippingCity());
         shipment.setStatus(Shipment.Status.EN_PREPARATION);
 
         Shipment saved = shipmentRepository.save(shipment);
-
-        // Add initial status history
-        addStatusHistory(saved, "En préparation", requestDto.getShippingCity(), 
+        addStatusHistory(saved, "En préparation", dto.getShippingCity(),
                 "Colis enregistré à l'agence de départ");
 
         return mapToResponseDto(saved);
     }
 
+    // =============================================
+    // READ ALL
+    // =============================================
     @Transactional(readOnly = true)
     public List<ShipmentResponseDto> getAllShipments() {
         return shipmentRepository.findAllOrderByCreatedAtDesc()
@@ -51,6 +65,9 @@ public class ShipmentService {
                 .collect(Collectors.toList());
     }
 
+    // =============================================
+    // READ ONE
+    // =============================================
     @Transactional(readOnly = true)
     public ShipmentResponseDto getShipmentById(Long id) {
         Shipment shipment = shipmentRepository.findById(id)
@@ -58,6 +75,9 @@ public class ShipmentService {
         return mapToResponseDto(shipment);
     }
 
+    // =============================================
+    // TRACK
+    // =============================================
     @Transactional(readOnly = true)
     public TrackingResponse trackShipment(String trackingNumber) {
         return shipmentRepository.findByTrackingNumber(trackingNumber)
@@ -85,21 +105,35 @@ public class ShipmentService {
                         .build());
     }
 
+    // =============================================
+    // UPDATE
+    // =============================================
     @Transactional
-    public ShipmentResponseDto updateShipment(Long id, ShipmentRequestDto requestDto) {
+    public ShipmentResponseDto updateShipment(Long id, ShipmentRequestDto dto) {
         Shipment shipment = shipmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Expédition non trouvée"));
 
-        shipment.setRecipientFirstName(requestDto.getRecipientFirstName());
-        shipment.setRecipientLastName(requestDto.getRecipientLastName());
-        shipment.setShippingCity(requestDto.getShippingCity());
-        shipment.setDeliveryCity(requestDto.getDeliveryCity());
-        shipment.setCountry(requestDto.getCountry());
-        shipment.setShippingDate(requestDto.getShippingDate());
+        if (dto.getTrackingNumber() != null && !dto.getTrackingNumber().isBlank()) {
+            shipment.setTrackingNumber(dto.getTrackingNumber());
+        }
+        shipment.setSenderFirstName(dto.getSenderFirstName());
+        shipment.setSenderLastName(dto.getSenderLastName());
+        shipment.setRecipientFirstName(dto.getRecipientFirstName());
+        shipment.setRecipientLastName(dto.getRecipientLastName());
+        shipment.setPackageType(dto.getPackageType());
+        shipment.setWeight(dto.getWeight());
+        shipment.setShippingCity(dto.getShippingCity());
+        shipment.setDeliveryCity(dto.getDeliveryCity());
+        shipment.setCountry(dto.getCountry());
+        shipment.setPhone(dto.getPhone());
+        shipment.setShippingDate(dto.getShippingDate());
 
         return mapToResponseDto(shipmentRepository.save(shipment));
     }
 
+    // =============================================
+    // UPDATE STATUS
+    // =============================================
     @Transactional
     public ShipmentResponseDto updateStatus(Long id, StatusUpdateRequest request) {
         Shipment shipment = shipmentRepository.findById(id)
@@ -107,25 +141,32 @@ public class ShipmentService {
 
         shipment.setCurrentStatus(request.getStatus());
         shipment.setCurrentLocation(request.getLocation());
-        
-        // Update enum status if valid
+
         try {
-            Shipment.Status newStatus = Shipment.Status.valueOf(request.getStatus().toUpperCase().replace(" ", "_"));
+            Shipment.Status newStatus = Shipment.Status.valueOf(
+                    request.getStatus().toUpperCase().replace(" ", "_"));
             shipment.setStatus(newStatus);
         } catch (IllegalArgumentException e) {
-            // Keep existing enum status if conversion fails
+            // Garde le statut enum existant si la conversion échoue
         }
 
-        addStatusHistory(shipment, request.getStatus(), request.getLocation(), request.getDescription());
-        
+        addStatusHistory(shipment, request.getStatus(),
+                request.getLocation(), request.getDescription());
+
         return mapToResponseDto(shipmentRepository.save(shipment));
     }
 
+    // =============================================
+    // DELETE
+    // =============================================
     @Transactional
     public void deleteShipment(Long id) {
         shipmentRepository.deleteById(id);
     }
 
+    // =============================================
+    // STATS
+    // =============================================
     @Transactional(readOnly = true)
     public long countAllShipments() {
         return shipmentRepository.countAllShipments();
@@ -141,7 +182,11 @@ public class ShipmentService {
         return shipmentRepository.countInTransitShipments();
     }
 
-    private void addStatusHistory(Shipment shipment, String status, String location, String description) {
+    // =============================================
+    // PRIVATE HELPERS
+    // =============================================
+    private void addStatusHistory(Shipment shipment, String status,
+                                   String location, String description) {
         ShipmentStatusHistory history = new ShipmentStatusHistory();
         history.setShipment(shipment);
         history.setStatus(status);
@@ -154,15 +199,21 @@ public class ShipmentService {
         return ShipmentResponseDto.builder()
                 .id(shipment.getId())
                 .trackingNumber(shipment.getTrackingNumber())
+                .senderFirstName(shipment.getSenderFirstName())
+                .senderLastName(shipment.getSenderLastName())
                 .recipientFirstName(shipment.getRecipientFirstName())
                 .recipientLastName(shipment.getRecipientLastName())
-                .recipientFullName(shipment.getRecipientFirstName() + " " + shipment.getRecipientLastName())
+                .recipientFullName(shipment.getRecipientFirstName()
+                        + " " + shipment.getRecipientLastName())
+                .packageType(shipment.getPackageType())
+                .weight(shipment.getWeight())
                 .shippingCity(shipment.getShippingCity())
                 .deliveryCity(shipment.getDeliveryCity())
                 .country(shipment.getCountry())
                 .shippingDate(shipment.getShippingDate())
                 .currentStatus(shipment.getCurrentStatus())
                 .currentLocation(shipment.getCurrentLocation())
+                .phone(shipment.getPhone())
                 .status(shipment.getStatus())
                 .statusHistory(shipment.getStatusHistory().stream()
                         .map(this::mapToStatusHistoryDto)

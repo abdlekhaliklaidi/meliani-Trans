@@ -31,6 +31,7 @@ import { ContactService } from '../../services/contact.service';
                 <div>
                   <span class="label">Téléphone</span>
                   <span class="value">+212 6 68 18 95 58</span>
+                  <span class="value">+212 6 22 53 78 06</span>
                 </div>
               </div>
               
@@ -40,7 +41,7 @@ import { ContactService } from '../../services/contact.service';
                 </div>
                 <div>
                   <span class="label">Email</span>
-                  <span class="value">contact&#64;melianitrans.com</span>
+                  <span class="value">transmeliani&#64;gmail.com</span>
                 </div>
               </div>
               
@@ -50,7 +51,7 @@ import { ContactService } from '../../services/contact.service';
                 </div>
                 <div>
                   <span class="label">Adresse</span>
-                  <span class="value">Route de Tiret, n°/21, Oujda Maroc</span>
+                  <span class="value">Route tairet lot laanaya N/21-Oujda</span>
                 </div>
               </div>
               

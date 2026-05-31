@@ -90,37 +90,43 @@ import { Shipment } from '../../models/shipment.model';
           </div>
 
           <!-- Recent Shipments -->
-          <div class="dashboard-section">
-            <div class="section-header">
-              <h2>Expéditions récentes</h2>
-              <a routerLink="/admin/expeditions" class="btn-link">Voir tout <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="table-responsive">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>N° Suivi</th>
-                    <th>Destinataire</th>
-                    <th>Trajet</th>
-                    <th>Statut</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let s of recentShipments">
-                    <td><span class="tracking-badge">{{ s.trackingNumber }}</span></td>
-                    <td>{{ s.recipientFullName }}</td>
-                    <td>{{ s.shippingCity }} → {{ s.deliveryCity }}</td>
-                    <td><span [class]="getStatusClass(s.status)">{{ getStatusLabel(s.status) }}</span></td>
-                    <td>{{ s.createdAt | date:'dd/MM/yyyy' }}</td>
-                  </tr>
-                  <tr *ngIf="recentShipments.length === 0">
-                    <td colspan="5" class="empty-state">Aucune expédition trouvée</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+<div class="dashboard-section">
+  <div class="section-header">
+    <h2>Expéditions récentes</h2>
+    <a routerLink="/admin/expeditions" class="btn-link">Voir tout <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>N° Suivi</th>
+          <th>Expéditeur</th>
+          <th>Destinataire</th>
+          <th>Téléphone</th>
+          <th>Type / Poids</th>
+          <th>Trajet</th>
+          <th>Statut</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of recentShipments">
+          <td><span class="tracking-badge">{{ s.trackingNumber }}</span></td>
+          <td>{{ s.senderFirstName }} {{ s.senderLastName }}</td>
+          <td>{{ s.recipientFullName }}</td>
+          <td>{{ s.phone || '—' }}</td>
+          <td>{{ s.packageType }} / {{ s.weight }} kg</td>
+          <td>{{ s.shippingCity }} → {{ s.deliveryCity }}</td>
+          <td><span [class]="getStatusClass(s.status)">{{ getStatusLabel(s.status) }}</span></td>
+          <td>{{ s.createdAt | date:'dd/MM/yyyy' }}</td>
+        </tr>
+        <tr *ngIf="recentShipments.length === 0">
+          <td colspan="8" class="empty-state">Aucune expédition trouvée</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
         </div>
       </main>
     </div>
