@@ -1,6 +1,8 @@
 package com.melianitrans;
 
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,13 +36,17 @@ public class MelianiTransApplication {
                 + (uri.getQuery() == null ? "" : "?" + uri.getQuery());
         System.setProperty("spring.datasource.url", jdbcUrl);
 
-        String userInfo = uri.getUserInfo();
+        String userInfo = uri.getRawUserInfo();
         if (userInfo != null) {
             String[] credentials = userInfo.split(":", 2);
-            System.setProperty("spring.datasource.username", credentials[0]);
+            System.setProperty("spring.datasource.username", decodeUrlPart(credentials[0]));
             if (credentials.length > 1) {
-                System.setProperty("spring.datasource.password", credentials[1]);
+                System.setProperty("spring.datasource.password", decodeUrlPart(credentials[1]));
             }
         }
+    }
+
+    private static String decodeUrlPart(String value) {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
 }
