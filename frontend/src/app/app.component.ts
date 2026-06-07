@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CommonModule } from '@angular/common';
@@ -9,11 +9,11 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent, CommonModule],
   template: `
-    <app-navbar></app-navbar>
+    <app-navbar *ngIf="!isAdminRoute"></app-navbar>
     <main>
       <router-outlet></router-outlet>
     </main>
-    <app-footer></app-footer>
+    <app-footer *ngIf="!isAdminRoute"></app-footer>
   `,
   styles: [`
     main {
@@ -23,4 +23,11 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'Transport Meliani';
+  isAdminRoute = false;
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      this.isAdminRoute = this.router.url.startsWith('/admin');
+    });
+  }
 }

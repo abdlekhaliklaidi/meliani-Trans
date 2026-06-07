@@ -103,24 +103,26 @@ meliani-trans/
 
 ### 1. Configuration de la Base de Donnees
 
-Creer une base de donnees PostgreSQL :
+Le backend est configure pour Neon PostgreSQL. Dans Neon, copiez la connection string puis convertissez-la au format JDBC pour Spring Boot :
 
-```sql
-CREATE DATABASE melianitrans;
+```text
+postgresql://neondb_owner:password@ep-wispy-haze-a2rr314o-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+jdbc:postgresql://ep-wispy-haze-a2rr314o-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require
 ```
 
-Configurer les variables d'environnement (ou modifier `application.properties`) :
+Configurer les variables d'environnement :
 
 ```bash
 # Linux/Mac
-export DATABASE_URL=jdbc:postgresql://localhost:5432/melianitrans
-export DB_USERNAME=postgres
-export DB_PASSWORD=votre_mot_de_passe
+export DATABASE_URL="jdbc:postgresql://ep-wispy-haze-a2rr314o-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require"
+export DB_USERNAME="neondb_owner"
+export DB_PASSWORD="votre_mot_de_passe_neon"
 
 # Windows
-set DATABASE_URL=jdbc:postgresql://localhost:5432/melianitrans
-set DB_USERNAME=postgres
-set DB_PASSWORD=votre_mot_de_passe
+set "DATABASE_URL=jdbc:postgresql://ep-wispy-haze-a2rr314o-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require"
+set "DB_USERNAME=neondb_owner"
+set "DB_PASSWORD=votre_mot_de_passe_neon"
 ```
 
 ### 2. Lancer le Backend
@@ -155,17 +157,10 @@ Le frontend demarre sur `http://localhost:4200`
 
 ## Configuration PostgreSQL Cloud
 
-Pour utiliser un PostgreSQL Cloud (Neon, Supabase, Railway, etc.), mettez a jour `application.properties` :
+Pour utiliser un autre PostgreSQL Cloud (Neon, Supabase, Railway, etc.), mettez a jour les variables d'environnement :
 
-```properties
-spring.datasource.url=jdbc:postgresql://votre-host-cloud.com:5432/melianitrans
-spring.datasource.username=votre_username
-spring.datasource.password=votre_password
-```
-
-Ou utilisez les variables d'environnement :
 ```bash
-export DATABASE_URL=jdbc:postgresql://votre-host-cloud.com:5432/melianitrans
+export DATABASE_URL=jdbc:postgresql://votre-host-cloud.com:5432/votre_database?sslmode=require
 export DB_USERNAME=votre_username
 export DB_PASSWORD=votre_password
 ```
@@ -215,9 +210,9 @@ export DB_PASSWORD=votre_password
 
 | Variable | Description | Defaut |
 |----------|-------------|--------|
-| `DATABASE_URL` | URL JDBC PostgreSQL | `jdbc:postgresql://localhost:5432/melianitrans` |
-| `DB_USERNAME` | Nom d'utilisateur DB | `postgres` |
-| `DB_PASSWORD` | Mot de passe DB | `postgres` |
+| `DATABASE_URL` | URL JDBC PostgreSQL | Neon `neondb` |
+| `DB_USERNAME` | Nom d'utilisateur DB | `neondb_owner` |
+| `DB_PASSWORD` | Mot de passe DB | requis |
 | `JWT_SECRET` | Cle secrete JWT | `melianiTransSecretKey2024...` |
 | `JWT_EXPIRATION` | Duree de validite JWT (ms) | `86400000` |
 | `CORS_ORIGINS` | Origines CORS autorisees | `http://localhost:4200` |
