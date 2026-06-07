@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      PORT: 8080
+      DATABASE_URL: jdbc:postgresql://postgres:5432/meliani_trans
+      DB_USERNAME: meliani
+      DB_PASSWORD: meliani
+      JWT_SECRET: change-this-local-dev-secret-to-a-long-random-value
+      ADMIN_EMAIL: admin@melianitrans.local
+      ADMIN_PASSWORD: ChangeMe123!
+      CORS_ORIGINS: http://localhost:4200,http://localhost:8080
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: meliani_trans
+      POSTGRES_USER: meliani
+      POSTGRES_PASSWORD: meliani
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
